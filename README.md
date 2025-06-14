@@ -19,7 +19,7 @@ Añadir autenticación y autorización (JWT, OAuth, etc.)
 
 Implementar validaciones de datos con librerías como Joi o express-validator
 
-Conectar a base de datos (MongoDB, MySQL, PostgreSQL, etc.)
+Conectar a base de datos (firestore)
 
 Añadir tests unitarios e integración
 
