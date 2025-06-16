@@ -62,8 +62,20 @@ const createUser = (req, res) => {
   res.send("Usuario creado");
 };
 
+const updateUser = (req, res) => {
+  res.send("Usuario actualizado");
+};
+
+const deleteUser = (req, res) => {
+  res.send("Usuario elininado");
+};
+
+
+
 export {
   getAllUsers,
   getUserById,
-  createUser
+  createUser,
+  updateUser,
+  deleteUser
 };
