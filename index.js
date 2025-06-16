@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import productsRouter from "./src/routes/products.routes.js";
+import usersRouter from "./src/routes/users.routes.js";
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +14,8 @@ app.use(express.json());
 
 //aqui irian las rutas
 app.use('/api', productsRouter);
-//app.use('/api', usersRouter);
+
+app.use('/api', usersRouter);
 
 
 
