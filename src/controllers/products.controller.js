@@ -3,41 +3,15 @@ import products from "../models/products.model.js";
 
 const getAllProducts = async (req, res) => {
   try {
-    const { nombre, categoria, color, precio } = req.query;
-
     let resultados = products; // array en memoria
 
-    if (nombre) {
-      resultados = resultados.filter(p =>
-        p.nombre.toLowerCase().includes(nombre.toLowerCase())
-      );
-    }
-
-    if (categoria) {
-      resultados = resultados.filter(p =>
-        p.categoria.toLowerCase() === categoria.toLowerCase()
-      );
-    }
-
-    if (color) {
-      resultados = resultados.filter(p =>
-        p.color.toLowerCase() === color.toLowerCase()
-      );
-    }
-
-    if (precio) {
-      const precioNum = Number(precio);
-      if (!isNaN(precioNum)) {
-        resultados = resultados.filter(p => p.precio <= precioNum);
-      }
-    }
-
     res.status(200).json({
-      status: 200,
-      count: resultados.length,
-      data: resultados,
-    });
-  } catch (error) {
+    status: 200,
+    count: resultados.length, // muestra la cantidad de registros
+    data: resultados //el array de productos
+  });
+
+} catch (error) {
     res.status(500).json({
       status: 500,
       message: "Error al obtener los productos",
@@ -55,7 +29,7 @@ const getProductById = async (req, res) => {
     const itemId = products.find(product => product.id === id);
 
     if (!itemId) {
-      return res.status(404).json({
+      return res.status(404).json({ //return envia mensaje y detiene la ejecucion
         status: 404,
         message: "Producto no encontrado",
       });
@@ -76,16 +50,16 @@ const getProductById = async (req, res) => {
   }
 };
 
+
 const createProduct = async (req, res) => {
-  
-  
   try {
-      if (!req.body) {
+    if (!req.body) {
       return res.status(400).json({
         status: 400,
-        message: "Metodo POST, el cuerpo de la solicitud está vacío",
+        message: "El cuerpo de la solicitud está vacío",
       });
-    } //  es para probar la funcion para que no de undefined 
+    }
+
     const { nombre, categoria, color, precio } = req.body;
 
     if (!nombre || !categoria || !color || !precio) {
@@ -95,17 +69,37 @@ const createProduct = async (req, res) => {
       });
     }
 
-    // Aquí se implementará la lógica real más adelante
+      // Revisar si hay productos en el array
+    let nuevoId = 1; // Si no hay productos, el ID será 1
+
+    if (products.length > 0) {
+      // Buscar el ID más alto de los productos existentes
+      let maxId = 0;
+      for (let i = 0; i < products.length; i++) {
+        if (products[i].id > maxId) {
+          maxId = products[i].id;
+        }
+      }
+      // El nuevo ID será uno más que el mayor encontrado
+      nuevoId = maxId + 1;
+    }
+    
+    const nuevoProducto = {
+      id: nuevoId,
+      nombre,
+      categoria,
+      color,
+      precio: Number(precio),
+    };
+
+    products.push(nuevoProducto); // Agregar al array en memoria
+
     res.status(201).json({
       status: 201,
       message: "Producto creado",
-      data: {
-        nombre,
-        categoria,
-        color,
-        precio: Number(precio),
-      },
+      data: nuevoProducto,
     });
+
   } catch (error) {
     res.status(500).json({
       status: 500,
@@ -115,37 +109,44 @@ const createProduct = async (req, res) => {
   }
 };
 
-
 const updateProduct = async (req, res) => {
-  if (!req.body) {
-      return res.status(400).json({
-        status: 400,
-        message: "Metodo PUT, el cuerpo de la solicitud está vacío",
-      });
-    } //  es para probar la funcion para que no de undefined 
-
   try {
     const id = parseInt(req.params.id);
-    const { nombre, categoria, color, precio } = req.body;
 
-    if (isNaN(id)) {
-      return res.status(400).json({
-        status: 400,
-        message: "ID inválido",
+    const producto = products.find(p => p.id === id);
+
+    if (!producto) {
+      return res.status(404).json({
+        status: 404,
+        message: "Producto no encontrado",
       });
     }
 
-    // Aquí se implementará la lógica de actualización en base de datos
+    const { nombre, categoria, color, precio } = req.body;
+
+    if (!nombre || !categoria || !color || !precio) {
+      return res.status(400).json({
+        status: 400,
+        message: "Todos los campos son obligatorios",
+      });
+    }
+
+    // Modificar los registros
+    producto.nombre = nombre;
+    producto.categoria = categoria;
+    producto.color = color;
+    producto.precio = Number(precio);
 
     res.status(200).json({
       status: 200,
-      message: `Producto con ID ${id} modificado (simulación)`,
-      data: { nombre, categoria, color, precio },
+      message: "Producto modificado con éxito",
+      data: producto,
     });
+
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Error al actualizar el producto",
+      message: "Error al modificar el producto",
       error: error.message,
     });
   }
@@ -153,6 +154,39 @@ const updateProduct = async (req, res) => {
 
 
 const deleteProduct = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const index = products.findIndex(p => p.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({
+        status: 404,
+        message: "Producto no encontrado",
+      });
+    }
+
+    // Eliminar el producto del array
+    const eliminado = products.splice(index, 1)[0];
+
+    res.status(200).json({
+      status: 200,
+      message: "Producto eliminado",
+      data: eliminado,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Error al eliminar el producto",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+const deleteProduct_ = async (req, res) => {
   if (!req.body) {
       return res.status(400).json({
         status: 400,

@@ -6,13 +6,14 @@ import usersRouter from "./src/routes/users.routes.js";
 
 const app = express();
 const PORT = 3000;
+
 // Configuracion básica (permitir todos los orígenes)
 app.use(cors()); 
 
 // Middleware para parsear JSON
 app.use(express.json()); 
 
-//aqui irian las rutas
+//aqui van las rutas
 app.use('/api', productsRouter);
 
 app.use('/api', usersRouter);
