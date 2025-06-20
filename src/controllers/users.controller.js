@@ -4,56 +4,31 @@ import users from "../models/users.model.js";
 
 const getAllUsers = async (req, res) => {
   try {
-    const { nombre, apellido, edad, email } = req.query;
-
-  let resultados = users;
-
-  if (nombre) {
-    resultados = resultados.filter(p =>
-      p.nombre.toLowerCase().includes(nombre.toLowerCase())
-    );
-  }
-
-  if (apellido) {
-    resultados = resultados.filter(p =>
-      p.apellido.toLowerCase() === apellido.toLowerCase()
-    );
-  }
-
-  if (edad) {
-    const edadNum = Number(edad);
-    if (!isNaN(edad)) {
-      resultados = resultados.filter(p => p.edad <= edadNum);
-    };
-  }
-
-  if (email) {
-    resultados = resultados.filter(p =>
-      p.email.toLowerCase() === email.toLowerCase()
-    );
-    }
-  
-  res.json({
-    status: 200,
-    count: resultados.length,
-    data: resultados,
-  });
+    let resultados = users;
+    
+    res.status(200).json({
+      status: 200,
+      count: resultados.length,
+      data: resultados
+    });
+    
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Error al obtener los productos",
-      error: error.message,
+      message: "Error al obtener usuarios",
+      error: error.message
     });
   }
 };
+  
 
 const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-  const userId = users.find(user => user.id === id);
+    const userId = users.find(user => user.id === id);
 
   if (!userId) {
-    return res.status(404).json({
+    return res.status(404).json({ //return envia mensaje y detiene la ejecucion
       status: 404,
       message: "Usuario no encontrado",
     });
@@ -71,19 +46,17 @@ const getUserById = async (req, res) => {
       message: "Error al obtener el usuario",
       error: error.message,
     });
-    
   }
-  
 };
 
 const createUser = async (req, res) => {
   try {
-      if (!req.body) {
+    if (!req.body) {
       return res.status(400).json({
         status: 400,
-        message: "Metodo POST, el cuerpo de la solicitud está vacío",
+        message: "El cuerpo de la solicitud está vacío",
       });
-    } //  es para probar la funcion para que no de undefined 
+    }
     const { nombre, apellido, edad, email } = req.body;
 
     if (!nombre || !apellido || !edad || !email) {
@@ -92,16 +65,34 @@ const createUser = async (req, res) => {
         message: "Todos los campos son obligatorios",
       });
     }
-        // Aquí se implementará la lógica real más adelante
+    // Revisar si hay usuarios en el array
+    let nuevoId = 1; // Si no hay usuarios, el ID será 1
+    if (users.length > 0) {
+      // Buscar el ID más alto de los productos existentes
+      let maxId = 0;
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].id > maxId) {
+          maxId = users[i].id;
+        }
+      }
+      // El nuevo ID será uno más que el mayor encontrado
+      nuevoId = maxId + 1;
+    }
+
+    const nuevoUsuario = {
+      id: nuevoId,
+      nombre,
+      apellido,
+      edad: Number(edad),
+      email,
+    }
+
+    users.push(nuevoUsuario); // Agregar al array en memoria
+
     res.status(201).json({
-      status: 201,
+      status:201,
       message: "Usuario creado",
-      data: {
-        nombre,
-        apellido,
-        edad: Number(edad),
-        email,
-      },
+      data: nuevoUsuario
     });
     
     
@@ -111,79 +102,76 @@ const createUser = async (req, res) => {
       message: "Error al crear usuario",
       error: error.message,
     });
-    
   }
-
 };
 
 const updateUser = async (req, res) => {
-  if (!req.body) {
-      return res.status(400).json({
-        status: 400,
-        message: "Metodo PUT, el cuerpo de la solicitud está vacío",
-      });
-    } //  es para probar la funcion para que no de undefined 
-
   try {
     const id = parseInt(req.params.id);
-    const { nombre, apellido, edad, email } = req.body;
+    const user = users.find(u => u.id === id);
 
-    if (isNaN(id)) {
-      return res.status(400).json({
-        status: 400,
-        message: "ID inválido",
+    if (!user) {
+      return res.status(404).json({
+        status:404,
+        message: "Usuario no encontrado",
       });
     }
+    const { nombre, apellido, edad, email } = req.body;
 
-    // Aquí se implementará la lógica de actualización en base de datos
+    if (!nombre || !apellido || !edad || !email) {
+      return res.status(400).json({
+        status: 400,
+        message: "Todos los campos son obligatorios",
+      });
+    }
+    // Modificar los registros
+    user.nombre = nombre;
+    user.apellido = apellido;
+    user.edad = edad;
+    user.email = email;
 
     res.status(200).json({
       status: 200,
-      message: `Usuario con ID ${id} modificado (simulación)`,
-      data: { nombre, apellido, edad, email },
-    });
+      message: "Usuario modificado con éxito",
+      data: user,
+    })
+
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Error al actualizar usuario",
+      message: "Error al modifia el usuario",
       error: error.message,
     });
   }
-  
 };
 
 const deleteUser = async (req, res) => {
-    if (!req.body) {
-      return res.status(400).json({
-        status: 400,
-        message: "Metodo DELETE, el cuerpo de la solicitud está vacío",
-      });
-    } //  es para probar la funcion para que no de undefined 
-  
   try {
     const id = parseInt(req.params.id);
+    const index = users.findIndex(u => u.id === id);
 
-    if (isNaN(id)) {
-      return res.status(400).json({
-        status: 400,
-        message: "ID inválido",
+    if (index === -1) {
+      return res.status(404).json({
+        status: 404,
+        message: "Usuario no encontrado",
       });
     }
-
-    // Aquí se implementará la lógica de eliminación en base de datos
+     // Eliminar el usuario del array
+    const eliminado = users.splice(index, 1)[0];
 
     res.status(200).json({
       status: 200,
-      message: `Usuario con ID ${id} eliminado (simulación)`,
+      message: "Usuario eliminado",
+      data: eliminado,
     });
+
   } catch (error) {
-    res.status(500).json({
+     res.status(500).json({
       status: 500,
-      message: "Error al eliminar usuario",
+      message: "Error al eliminar el usuario",
       error: error.message,
     });
   }
-
 };
 
 
