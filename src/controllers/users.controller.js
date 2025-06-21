@@ -1,11 +1,10 @@
-// en desarrollo cuando se migre a base de datos implementara el await
 
-import users from "../models/users.model.js";
+import usersService from "../services/users.services.js";
 
 const getAllUsers = async (req, res) => {
   try {
-    let resultados = users;
-    
+    const resultados = await usersService.getAllUsers();
+
     res.status(200).json({
       status: 200,
       count: resultados.length,
@@ -25,8 +24,8 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const userId = users.find(user => user.id === id);
-
+    const userId = await usersService.getUserById(id);
+    
   if (!userId) {
     return res.status(404).json({ //return envia mensaje y detiene la ejecucion
       status: 404,
@@ -51,12 +50,6 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({
-        status: 400,
-        message: "El cuerpo de la solicitud está vacío",
-      });
-    }
     const { nombre, apellido, edad, email } = req.body;
 
     if (!nombre || !apellido || !edad || !email) {
@@ -65,34 +58,18 @@ const createUser = async (req, res) => {
         message: "Todos los campos son obligatorios",
       });
     }
-    // Revisar si hay usuarios en el array
-    let nuevoId = 1; // Si no hay usuarios, el ID será 1
-    if (users.length > 0) {
-      // Buscar el ID más alto de los productos existentes
-      let maxId = 0;
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].id > maxId) {
-          maxId = users[i].id;
-        }
-      }
-      // El nuevo ID será uno más que el mayor encontrado
-      nuevoId = maxId + 1;
-    }
-
-    const nuevoUsuario = {
-      id: nuevoId,
+        
+    const newUser = await usersService.createUser({
       nombre,
       apellido,
-      edad: Number(edad),
-      email,
-    }
+      edad,
+      email
+    })
 
-    users.push(nuevoUsuario); // Agregar al array en memoria
-
-    res.status(201).json({
+      res.status(201).json({
       status:201,
       message: "Usuario creado",
-      data: nuevoUsuario
+      data: newUser,
     });
     
     
@@ -108,38 +85,38 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const user = users.find(u => u.id === id);
-
-    if (!user) {
-      return res.status(404).json({
-        status:404,
-        message: "Usuario no encontrado",
-      });
-    }
     const { nombre, apellido, edad, email } = req.body;
 
-    if (!nombre || !apellido || !edad || !email) {
+    if (!nombre && !apellido && !edad && !email) {
       return res.status(400).json({
-        status: 400,
-        message: "Todos los campos son obligatorios",
+        status:400,
+        message: "Debe haber al menos un campo para actualizar",
       });
     }
-    // Modificar los registros
-    user.nombre = nombre;
-    user.apellido = apellido;
-    user.edad = edad;
-    user.email = email;
+    const updatedUser = await usersService.updateUser(id, {
+      nombre,
+      apellido,
+      edad,
+      email,
+    });
+
+    if (!updateUser) {
+      return res.status(404).json({
+        status: 404,
+        message: "usuario no encontrado"
+      });
+    }
 
     res.status(200).json({
       status: 200,
       message: "Usuario modificado con éxito",
-      data: user,
+      data: updatedUser,
     })
 
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Error al modifia el usuario",
+      message: "Error al modificar el usuario",
       error: error.message,
     });
   }
@@ -148,21 +125,19 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const index = users.findIndex(u => u.id === id);
-
-    if (index === -1) {
+    const deleted = await usersService.deleteUser(id);
+        
+    if (!deleted) {
       return res.status(404).json({
         status: 404,
         message: "Usuario no encontrado",
       });
     }
-     // Eliminar el usuario del array
-    const eliminado = users.splice(index, 1)[0];
 
     res.status(200).json({
       status: 200,
       message: "Usuario eliminado",
-      data: eliminado,
+      data: deleted,
     });
 
   } catch (error) {
