@@ -1,14 +1,14 @@
 // en desarrollo cuando se migre a base de datos implementara el await
-import products from "../models/products.model.js";
+import productsService from "../services/products.services.js"
 
 const getAllProducts = async (req, res) => {
   try {
-    let resultados = products; // array en memoria
+    const resultados = await productsService.getAllProducts(); 
 
     res.status(200).json({
     status: 200,
     count: resultados.length, // muestra la cantidad de registros
-    data: resultados //el array de productos
+    data: resultados, //el array de productos
   });
 
 } catch (error) {
@@ -20,13 +20,10 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-
 const getProductById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-
-    // Simulación de acceso asincrónico (aunque ahora sea local)
-    const itemId = products.find(product => product.id === id);
+    const itemId = await productsService.getProductById(id);
 
     if (!itemId) {
       return res.status(404).json({ //return envia mensaje y detiene la ejecucion
@@ -53,13 +50,6 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({
-        status: 400,
-        message: "El cuerpo de la solicitud está vacío",
-      });
-    }
-
     const { nombre, categoria, color, precio } = req.body;
 
     if (!nombre || !categoria || !color || !precio) {
@@ -69,35 +59,17 @@ const createProduct = async (req, res) => {
       });
     }
 
-      // Revisar si hay productos en el array
-    let nuevoId = 1; // Si no hay productos, el ID será 1
-
-    if (products.length > 0) {
-      // Buscar el ID más alto de los productos existentes
-      let maxId = 0;
-      for (let i = 0; i < products.length; i++) {
-        if (products[i].id > maxId) {
-          maxId = products[i].id;
-        }
-      }
-      // El nuevo ID será uno más que el mayor encontrado
-      nuevoId = maxId + 1;
-    }
+    const newProduct = await productsService.createProduct({
+       nombre,
+       categoria,
+       color,
+       precio
+    });
     
-    const nuevoProducto = {
-      id: nuevoId,
-      nombre,
-      categoria,
-      color,
-      precio: Number(precio),
-    };
-
-    products.push(nuevoProducto); // Agregar al array en memoria
-
     res.status(201).json({
       status: 201,
       message: "Producto creado",
-      data: nuevoProducto,
+      data: newProduct,
     });
 
   } catch (error) {
@@ -112,35 +84,32 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-
-    const producto = products.find(p => p.id === id);
-
-    if (!producto) {
-      return res.status(404).json({
-        status: 404,
-        message: "Producto no encontrado",
-      });
-    }
-
     const { nombre, categoria, color, precio } = req.body;
 
-    if (!nombre || !categoria || !color || !precio) {
+    if (!nombre && !categoria && !color && !precio) {
       return res.status(400).json({
         status: 400,
-        message: "Todos los campos son obligatorios",
+        message: "Debe haber al menos un campo para actualizar",
       });
     }
+    const updateProduct = await productsService.updateProduct(id, {
+      nombre,
+      categoria,
+      color,
+      precio,
+    });
 
-    // Modificar los registros
-    producto.nombre = nombre;
-    producto.categoria = categoria;
-    producto.color = color;
-    producto.precio = Number(precio);
-
+    if (!updateProduct) {
+      return res.status(404).json({
+        status: 404,
+        message: "producto no encontrado"
+      });
+    }
+    
     res.status(200).json({
       status: 200,
-      message: "Producto modificado con éxito",
-      data: producto,
+      message: "Producto modificado",
+      data: updateProduct,
     });
 
   } catch (error) {
@@ -156,60 +125,21 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const index = products.findIndex(p => p.id === id);
+    const deleted = await productsService.deleteProduct(id);
 
-    if (index === -1) {
+    if (!deleted) {
       return res.status(404).json({
         status: 404,
-        message: "Producto no encontrado",
+        message: "Producto no encontrado"
       });
     }
-
-    // Eliminar el producto del array
-    const eliminado = products.splice(index, 1)[0];
-
+    
     res.status(200).json({
       status: 200,
       message: "Producto eliminado",
-      data: eliminado,
+      data: deleted,
     });
 
-  } catch (error) {
-    res.status(500).json({
-      status: 500,
-      message: "Error al eliminar el producto",
-      error: error.message,
-    });
-  }
-};
-
-
-
-
-const deleteProduct_ = async (req, res) => {
-  if (!req.body) {
-      return res.status(400).json({
-        status: 400,
-        message: "Metodo DELETE, el cuerpo de la solicitud está vacío",
-      });
-    } //  es para probar la funcion para que no de undefined 
-  
-  try {
-    const id = parseInt(req.params.id);
-
-    if (isNaN(id)) {
-      return res.status(400).json({
-        status: 400,
-        message: "ID inválido",
-      });
-    }
-
-    // Aquí se implementará la lógica de eliminación en base de datos
-
-    res.status(200).json({
-      status: 200,
-      message: `Producto con ID ${id} eliminado (simulación)`,
-    });
   } catch (error) {
     res.status(500).json({
       status: 500,
