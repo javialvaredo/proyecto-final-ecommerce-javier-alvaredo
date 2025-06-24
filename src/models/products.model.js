@@ -1,3 +1,10 @@
+import fs from 'fs'; 
+import path from 'path'; 
+const __dirname = import.meta.dirname; 
+
+const dataPath = path.join(__dirname, '../data/productos.json');
+
+
 const products = [
   {
     id: 1,
@@ -140,6 +147,21 @@ const products = [
     color: "rojo"
   }
 ];
+
+// convertir objeto a json
+const objetoAjson = (objeto, rutaArchivo = null) => {
+  const jsonString = JSON.stringify(objeto, null, 2);
+
+  if (rutaArchivo) {
+    fs.writeFileSync(rutaArchivo, jsonString);
+    console.log(`✅ Archivo guardado en: ${rutaArchivo}`);
+  }
+
+  return jsonString;
+};
+
+const resultado = objetoAjson(products, dataPath)
+console.log(resultado);
 
 
 export default products;
