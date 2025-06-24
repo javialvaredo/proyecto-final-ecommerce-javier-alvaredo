@@ -1,4 +1,3 @@
-// en desarrollo cuando se migre a base de datos implementara el await
 import productsService from "../services/products.services.js"
 
 const getAllProducts = async (req, res) => {
