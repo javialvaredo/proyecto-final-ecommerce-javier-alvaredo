@@ -1,167 +1,59 @@
-import fs from 'fs'; 
-import path from 'path'; 
-const __dirname = import.meta.dirname; 
+import { db } from '../data/data.js';
+import {
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  deleteDoc,
+  doc,
+  setDoc
+} from 'firebase/firestore';
 
-const dataPath = path.join(__dirname, '../data/productos.json');
+const productsCollection = collection(db, 'products');
 
+export async function getAllProducts() {
+  const querySnapshot = await getDocs(productsCollection);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); //agregamos el id al objeto 
+}
 
-const products = [
-  {
-    id: 1,
-    nombre: "Camiseta",
-    categoria: "Remeras",
-    precio: 4500,
-    color: "rojo"
-  },
-  {
-    id: 2,
-    nombre: "Pantalón",
-    categoria: "Bermudas",
-    precio: 5200,
-    color: "azul"
-  },
-  {
-    id: 3,
-    nombre: "Camisa",
-    categoria: "Camisas",
-    precio: 6000,
-    color: "blanco"
-  },
-  {
-    id: 4,
-    nombre: "Short",
-    categoria: "Bermudas",
-    precio: 4800,
-    color: "negro"
-  },
-  {
-    id: 5,
-    nombre: "Sudadera",
-    categoria: "Buzos",
-    precio: 7500,
-    color: "gris"
-  },
-  {
-    id: 6,
-    nombre: "Chomba",
-    categoria: "Remeras",
-    precio: 5300,
-    color: "verde"
-  },
-  {
-    id: 7,
-    nombre: "Campera",
-    categoria: "Abrigos",
-    precio: 12000,
-    color: "marrón"
-  },
-  {
-    id: 8,
-    nombre: "Jean",
-    categoria: "Pantalones",
-    precio: 6800,
-    color: "azul"
-  },
-  {
-    id: 9,
-    nombre: "Remera manga larga",
-    categoria: "Remeras",
-    precio: 4900,
-    color: "rojo"
-  },
-  {
-    id: 10,
-    nombre: "Buzo canguro",
-    categoria: "Buzos",
-    precio: 8000,
-    color: "gris"
-  },
-  {
-    id: 11,
-    nombre: "Pantalón de vestir",
-    categoria: "Pantalones",
-    precio: 9000,
-    color: "negro"
-  },
-  {
-    id: 12,
-    nombre: "Camisa de lino",
-    categoria: "Camisas",
-    precio: 7200,
-    color: "blanco"
-  },
-  {
-    id: 13,
-    nombre: "Remera deportiva",
-    categoria: "Remeras",
-    precio: 4700,
-    color: "verde"
-  },
-  {
-    id: 14,
-    nombre: "Bermuda cargo",
-    categoria: "Bermudas",
-    precio: 5600,
-    color: "beige"
-  },
-  {
-    id: 15,
-    nombre: "Campera rompevientos",
-    categoria: "Abrigos",
-    precio: 13000,
-    color: "negro"
-  },
-  {
-    id: 16,
-    nombre: "Jean roto",
-    categoria: "Pantalones",
-    precio: 7000,
-    color: "azul"
-  },
-  {
-    id: 17,
-    nombre: "Chomba lisa",
-    categoria: "Remeras",
-    precio: 5400,
-    color: "blanco"
-  },
-  {
-    id: 18,
-    nombre: "Sudadera con capucha",
-    categoria: "Buzos",
-    precio: 8200,
-    color: "gris"
-  },
-  {
-    id: 19,
-    nombre: "Pantalón corto",
-    categoria: "Bermudas",
-    precio: 4900,
-    color: "verde"
-  },
-  {
-    id: 20,
-    nombre: "Remera estampada",
-    categoria: "Remeras",
-    precio: 4600,
-    color: "rojo"
-  }
-];
+export async function getProductById(id) {
+  const productRef = doc(productsCollection, id);
+  const productSnap = await getDoc(productRef);
+  return productSnap.exists() ? { id: productSnap.id, ...productSnap.data() } : null;
+}
 
-// convertir objeto a json
-const objetoAjson = (objeto, rutaArchivo = null) => {
-  const jsonString = JSON.stringify(objeto, null, 2);
+export async function saveProduct(product) {
+  const docRef = await addDoc(productsCollection, product);
+  return { id: docRef.id, ...product };
+}
 
-  if (rutaArchivo) {
-    fs.writeFileSync(rutaArchivo, jsonString);
-    console.log(`✅ Archivo guardado en: ${rutaArchivo}`);
-  }
+export async function updateProduct(id, updatedProduct) {
+  const productRef = doc(productsCollection, id);
+  await setDoc(productRef, updatedProduct, { merge: true });
+  return { id, ...updatedProduct };
+}
 
-  return jsonString;
-};
+export async function deleteProduct(id) {
+  await deleteDoc(doc(productsCollection, id));
+  return true;
+}
 
-const resultado = objetoAjson(products, dataPath)
-console.log(resultado);
+//funcion para crear ID numérico incremental
 
+export async function createProductWithNumericId(productData) {
+  const querySnapshot = await getDocs(productsCollection);
+  const ids = querySnapshot.docs
+    .map(doc => doc.data().productId)   // Cambié aquí para que lea productId
+    .filter(id => typeof id === 'number');
 
-export default products;
+  const nextId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
+
+  // Guardamos productId en vez de id
+  const newProduct = { productId: nextId, ...productData };
+
+  const productRef = doc(productsCollection, String(nextId));
+  await setDoc(productRef, newProduct);
+
+  // Retornamos el id del doc Firestore (string) y productId numérico separado
+  return { id: String(nextId), productId: nextId, ...productData };
+}
