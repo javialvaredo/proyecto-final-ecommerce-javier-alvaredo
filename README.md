@@ -1,6 +1,6 @@
 # Node API REST - CRUD con arquitectura MVC
 
-API REST desarrollada en Node.js con Express que implementa operaciones CRUD (Crear, Leer, Actualizar y Eliminar) sobre productos. La estructura está basada en la arquitectura MVC para mantener el código organizado y escalable.
+API REST desarrollada en Node.js con Express que implementa operaciones CRUD (Crear, Leer, Actualizar y Eliminar) sobre productos. La estructura está basada en la arquitectura REST para mantener el código organizado y escalable.
 
 ---
 
@@ -9,7 +9,7 @@ API REST desarrollada en Node.js con Express que implementa operaciones CRUD (Cr
 - Node.js
 - Express
 - CORS
-- Arquitectura MVC (Model-View-Controller)
+- Arquitectura REST (Representational State Transfer)
 - ES Modules (import/export)
 
 ---

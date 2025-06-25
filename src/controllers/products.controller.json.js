@@ -1,5 +1,4 @@
-import * as productsService from "../services/products.services.js";
-
+import productsService from "../services/products.services.js"
 
 const getAllProducts = async (req, res) => {
   try {
@@ -22,7 +21,7 @@ const getAllProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const itemId = await productsService.getProductById(id);
 
     if (!itemId) {
@@ -85,7 +84,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const { nombre, categoria, descripcion, color, precio, stock } = req.body;
 
     if (!nombre && !categoria && !descripcion && !color && !precio && !stock) {
@@ -128,7 +127,7 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const deleted = await productsService.deleteProduct(id);
 
     if (!deleted) {

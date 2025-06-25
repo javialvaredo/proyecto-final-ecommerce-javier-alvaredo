@@ -3,140 +3,189 @@
     "id": 1,
     "nombre": "Camiseta",
     "categoria": "Remeras",
+    "descripcion": "Camiseta de algodón básica",
     "precio": 4500,
-    "color": "rojo"
+    "color": "rojo",
+    "stock": 25
   },
   {
     "id": 2,
     "nombre": "Pantalón",
     "categoria": "Bermudas",
+    "descripcion": "Pantalón corto de verano",
     "precio": 5200,
-    "color": "azul"
+    "color": "azul",
+    "stock": 15
   },
   {
     "id": 3,
     "nombre": "Camisa",
     "categoria": "Camisas",
+    "descripcion": "Camisa de vestir clásica",
     "precio": 6000,
-    "color": "blanco"
+    "color": "blanco",
+    "stock": 10
   },
   {
     "id": 4,
     "nombre": "Short",
     "categoria": "Bermudas",
+    "descripcion": "Short deportivo ligero",
     "precio": 4800,
-    "color": "negro"
+    "color": "negro",
+    "stock": 20
   },
   {
     "id": 5,
     "nombre": "Sudadera",
     "categoria": "Buzos",
+    "descripcion": "Sudadera con interior afelpado",
     "precio": 7500,
-    "color": "gris"
+    "color": "gris",
+    "stock": 12
   },
   {
     "id": 6,
     "nombre": "Chomba",
     "categoria": "Remeras",
+    "descripcion": "Chomba de piqué cuello polo",
     "precio": 5300,
-    "color": "verde"
+    "color": "verde",
+    "stock": 18
   },
   {
     "id": 7,
     "nombre": "Campera",
     "categoria": "Abrigos",
+    "descripcion": "Campera abrigada para invierno",
     "precio": 12000,
-    "color": "marrón"
+    "color": "marrón",
+    "stock": 8
   },
   {
     "id": 8,
     "nombre": "Jean",
     "categoria": "Pantalones",
+    "descripcion": "Jean clásico corte recto",
     "precio": 6800,
-    "color": "azul"
+    "color": "azul",
+    "stock": 22
   },
   {
     "id": 9,
     "nombre": "Remera manga larga",
     "categoria": "Remeras",
+    "descripcion": "Remera térmica de manga larga",
     "precio": 4900,
-    "color": "rojo"
+    "color": "rojo",
+    "stock": 17
   },
   {
     "id": 10,
     "nombre": "Buzo canguro",
     "categoria": "Buzos",
+    "descripcion": "Buzo con capucha y bolsillo frontal",
     "precio": 8000,
-    "color": "gris"
+    "color": "gris",
+    "stock": 14
   },
   {
     "id": 11,
     "nombre": "Pantalón de vestir",
     "categoria": "Pantalones",
+    "descripcion": "Pantalón elegante para eventos",
     "precio": 9000,
-    "color": "negro"
+    "color": "negro",
+    "stock": 9
   },
   {
     "id": 12,
     "nombre": "Camisa de lino",
     "categoria": "Camisas",
+    "descripcion": "Camisa fresca ideal para verano",
     "precio": 7200,
-    "color": "blanco"
+    "color": "blanco",
+    "stock": 11
   },
   {
     "id": 13,
     "nombre": "Remera deportiva",
     "categoria": "Remeras",
+    "descripcion": "Remera de secado rápido para deporte",
     "precio": 4700,
-    "color": "verde"
+    "color": "verde",
+    "stock": 19
   },
   {
     "id": 14,
     "nombre": "Bermuda cargo",
     "categoria": "Bermudas",
+    "descripcion": "Bermuda con bolsillos laterales",
     "precio": 5600,
-    "color": "beige"
+    "color": "beige",
+    "stock": 16
   },
   {
     "id": 15,
     "nombre": "Campera rompevientos",
     "categoria": "Abrigos",
+    "descripcion": "Campera liviana resistente al viento",
     "precio": 13000,
-    "color": "negro"
+    "color": "negro",
+    "stock": 7
   },
   {
     "id": 16,
     "nombre": "Jean roto",
     "categoria": "Pantalones",
+    "descripcion": "Jean de moda con roturas",
     "precio": 7000,
-    "color": "azul"
+    "color": "azul",
+    "stock": 13
   },
   {
     "id": 17,
     "nombre": "Chomba lisa",
     "categoria": "Remeras",
+    "descripcion": "Chomba clásica sin estampado",
     "precio": 5400,
-    "color": "blanco"
+    "color": "blanco",
+    "stock": 20
   },
   {
     "id": 18,
     "nombre": "Sudadera con capucha",
     "categoria": "Buzos",
+    "descripcion": "Sudadera cómoda con capucha ajustable",
     "precio": 8200,
-    "color": "gris"
+    "color": "gris",
+    "stock": 10
   },
   {
     "id": 19,
     "nombre": "Pantalón corto",
     "categoria": "Bermudas",
+    "descripcion": "Pantalón corto casual",
     "precio": 4900,
-    "color": "verde"
+    "color": "verde",
+    "stock": 21
   },
   {
     "id": 20,
-    "nombre": "Remera estampada",
+    "nombre": "Musculosa",
     "categoria": "Remeras",
-    "precio": 4600,
-    "color": "rojo"
+    "descripcion": "Musculosa deportiva",
+    "precio": 800,
+    "color": "azul",
+    "stock": 25
+  },
+  {
+    "id": 21,
+    "nombre": "Musculosa",
+    "categoria": "Remeras",
+    "descripcion": "Musculosa deportiva",
+    "color": "multicolor",
+    "precio": 800,
+    "stock": 50
   }
 ]
