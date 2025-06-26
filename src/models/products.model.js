@@ -9,17 +9,23 @@ import {
   setDoc
 } from 'firebase/firestore';
 
-const productsCollection = collection(db, 'products');
+const productsCollection = collection(db, 'products'); // obtiene el objeto con todos los documentos
 
-export async function getAllProducts() {
-  const querySnapshot = await getDocs(productsCollection);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); //agregamos el id al objeto 
-}
+
+export async function getAllProducts() { 
+  const querySnapshot = await getDocs(productsCollection); 
+  const products = []; 
+  querySnapshot.forEach((doc) => { 
+    products.push({ id: doc.id, ...doc.data() }); 
+  }); 
+  return products; 
+};
+
 
 export async function getProductById(id) {
   const productRef = doc(productsCollection, id);
   const productSnap = await getDoc(productRef);
-  return productSnap.exists() ? { id: productSnap.id, ...productSnap.data() } : null;
+  return productSnap.exists() ? { id: productSnap.id, ...productSnap.data() } : null; // retorna json con id
 }
 
 export async function saveProduct(product) {
@@ -39,21 +45,30 @@ export async function deleteProduct(id) {
 }
 
 //funcion para crear ID numérico incremental
-
 export async function createProductWithNumericId(productData) {
-  const querySnapshot = await getDocs(productsCollection);
-  const ids = querySnapshot.docs
-    .map(doc => doc.data().productId)   // Cambié aquí para que lea productId
-    .filter(id => typeof id === 'number');
+  const snapshot = await getDocs(productsCollection);  // Traer todos los productos de Firestore
 
-  const nextId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
+  // Crear una lista de los productId existentes, solo los que son números
+  const productIds = [];
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (typeof data.productId === 'number') {
+      productIds.push(data.productId);
+    }
+  });
 
-  // Guardamos productId en vez de id
-  const newProduct = { productId: nextId, ...productData };
+  // Buscar el próximo número disponible para usar como productId
+  let newId = 1;
+  if (productIds.length > 0) {
+    const maxId = Math.max(...productIds);
+    newId = maxId + 1;
+  }
+  
+  const newProduct = { productId: newId, ...productData }; // Crear el nuevo producto con el nuevo productId
 
-  const productRef = doc(productsCollection, String(nextId));
-  await setDoc(productRef, newProduct);
+  const docRef = doc(productsCollection, String(newId));   // Crear la referencia al documento con el ID en formato texto
+  
+  await setDoc(docRef, newProduct); // Guardar el registro en Firestore
 
-  // Retornamos el id del doc Firestore (string) y productId numérico separado
-  return { id: String(nextId), productId: nextId, ...productData };
+  return { id: String(newId), productId: newId, ...productData };   // retornar el nuevo producto con id y productId
 }
