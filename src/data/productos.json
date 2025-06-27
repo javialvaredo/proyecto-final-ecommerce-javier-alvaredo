@@ -48,7 +48,7 @@
     "id": 6,
     "nombre": "Chomba",
     "categoria": "Remeras",
-    "descripcion": "Chomba de piqué cuello polo",
+    "descripcion": "Chomba de cuello polo",
     "precio": 5300,
     "color": "verde",
     "stock": 18
@@ -84,7 +84,7 @@
     "id": 10,
     "nombre": "Buzo canguro",
     "categoria": "Buzos",
-    "descripcion": "Buzo con capucha y bolsillo frontal",
+    "descripcion": "Buzo con capucha",
     "precio": 8000,
     "color": "gris",
     "stock": 14

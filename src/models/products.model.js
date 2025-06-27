@@ -9,12 +9,12 @@ import {
   setDoc
 } from 'firebase/firestore';
 
-const productsCollection = collection(db, 'products'); // obtiene el objeto con todos los documentos
+const productsCollection = collection(db, 'products'); // obtiene la referencia al objeto parapoder operar
 
 
 export async function getAllProducts() { 
-  const querySnapshot = await getDocs(productsCollection); 
-  const products = []; 
+  const querySnapshot = await getDocs(productsCollection); //obtiene todos los documentos de firestore
+  const products = []; //array para guardar los productos que se obtienen
   querySnapshot.forEach((doc) => { 
     products.push({ id: doc.id, ...doc.data() }); 
   }); 

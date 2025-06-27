@@ -3,7 +3,7 @@ import * as productsService from "../services/products.services.js";
 
 const getAllProducts = async (req, res) => {
   try {
-    const resultados = await productsService.getAllProducts(); 
+    const resultados = await productsService.getAllProducts(); //funcion del controlador le pide resuldados al services (y el services al modelo (bd) )
 
     res.status(200).json({
     status: 200,

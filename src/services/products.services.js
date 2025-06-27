@@ -1,12 +1,14 @@
 import * as ProductModel from '../models/products.model.js';
 
 export async function getAllProducts() {
-  return await ProductModel.getAllProducts();
+  const products = await ProductModel.getAllProducts();
+  return products;
 }
 
 export async function getProductById(id) {
   if (!id) throw new Error('ID es requerido');
-  return await ProductModel.getProductById(id);
+  const product = await ProductModel.getProductById(id);
+  return product;
 }
 
 export async function createProduct(data) {
@@ -24,7 +26,8 @@ export async function createProduct(data) {
     stock: Number(data.stock),
   };
 
-  return await ProductModel.createProductWithNumericId(newProduct);
+  const product = await ProductModel.createProductWithNumericId(newProduct);
+  return product;
 }
 
 export async function updateProduct(id, data) {
@@ -43,10 +46,12 @@ export async function updateProduct(id, data) {
     stock: Number(data.stock),
   };
 
-  return await ProductModel.updateProduct(id, updatedProduct);
+  const product = await ProductModel.updateProduct(id, updatedProduct);
+  return product;
 }
 
 export async function deleteProduct(id) {
   if (!id) throw new Error('ID es requerido');
-  return await ProductModel.deleteProduct(id);
+  const product = await ProductModel.deleteProduct(id);
+  return product;
 }
