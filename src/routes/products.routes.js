@@ -1,4 +1,7 @@
-import express from "express";
+//import express from "express";
+
+import { Router } from "express";
+
 
 import {
   getAllProducts,
@@ -8,7 +11,7 @@ import {
   deleteProduct
 } from "../controllers/products.controller.js";
 
-const router = express.Router();
+const router = Router();
 
 router.get('/products', getAllProducts);
 router.get('/products/:id', getProductById);
