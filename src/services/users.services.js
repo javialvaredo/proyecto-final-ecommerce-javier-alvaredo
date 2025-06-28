@@ -1,61 +1,66 @@
-import users from "../models/users.model.js"
+import * as UserModel from "../models/users.model.js";
+import bcrypt from 'bcrypt';
 
-const getAllUsers = async () => {
+export async function getAllUsers() {
+  const users = await UserModel.getAllUsers();
   return users;
 };
   
 
-const getUserById = async (id) => {
-  return users.find(user => user.id == id);
+export async function getUserById(id) {
+  if (!id) throw new Error('ID es requerido');
+  const user = await UserModel.getUserById(id);
+  return user;
 };
 
-const createUser = async (userData) => {
-  
-    const newUser = {
-      id: users.length +1,
-      nombre: userData.nombre,
-      apellido: userData.apellido,
-      edad: Number(userData.edad),
-      email: userData.email,
-    }
-
-    users.push(newUser); // Agregar al array en memoria
-    return newUser;
-};
-
-const updateUser = async (id, updatedData) => {
-    const index = users.findIndex(u => u.id == id)
-    if (index === -1) {
-    return null; // Usuario no encontrado
+export async function createUser(data) {
+  const required = ['nombre', 'apellido', 'edad', 'email', 'password'];
+  for (const field of required) {
+    if (!data[field]) throw new Error(`Campo requerido: ${field}`); 
   }
-    const user = users[index];
-     
-    if (updatedData.nombre) { 
-        user.nombre = updatedData.nombre;
-    }
-    if (updatedData.apellido) {
-        user.apellido = updatedData.apellido;
-    }
-    if (updatedData.edad) {
-        user.edad = Number(updatedData.edad);
-    }
-    if (updatedData.email) {
-        user.email = updatedData.email;
-    }
-    return user;
+
+    // Hashear la contraseña antes de guardarla
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const newUser = {
+      nombre: data.nombre,
+      apellido: data.apellido,
+      edad: Number(data.edad),
+      email: data.email,
+      password: hashedPassword,
+  };
+
+  const user = await UserModel.createUserWithNumericId(newUser);
+  return user;
 };
 
-const deleteUser = async (id) => {
-  const index = users.findIndex(u => u.id == id);
-  if (index === -1) return false;
-  users.splice(index, 1); // eliminamos el usuario
-  return true;
+export async function updateUser(id, data) {
+  if (!id) throw new Error('ID es requerido');
+
+  const fieldsToUpdate = {};
+
+  if (data.nombre) fieldsToUpdate.nombre = data.nombre;
+  if (data.apellido) fieldsToUpdate.apellido = data.apellido;
+  if (data.edad) fieldsToUpdate.edad = Number(data.edad);
+  if (data.email) fieldsToUpdate.email = data.email;
+
+  if (data.password) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    fieldsToUpdate.password = hashedPassword;
+  }
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    throw new Error('No se proporcionaron campos para actualizar');
+  }
+
+  const user = await UserModel.updateUser(id, fieldsToUpdate);
+  return user;
+}
+
+
+export async function deleteUser(id) {
+  if (!id) throw new Error('ID es requerido');
+    const product = await UserModel.deleteUser(id);
+    return product;
 };
 
-export default {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser,
-};
