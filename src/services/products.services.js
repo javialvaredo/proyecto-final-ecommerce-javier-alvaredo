@@ -3,13 +3,13 @@ import * as ProductModel from '../models/products.model.js';
 export async function getAllProducts() {
   const products = await ProductModel.getAllProducts();
   return products;
-}
+};
 
 export async function getProductById(id) {
   if (!id) throw new Error('ID es requerido');
   const product = await ProductModel.getProductById(id);
   return product;
-}
+};
 
 export async function createProduct(data) {
   const required = ['nombre', 'categoria', 'descripcion', 'color', 'precio', 'stock'];
@@ -28,7 +28,7 @@ export async function createProduct(data) {
 
   const product = await ProductModel.createProductWithNumericId(newProduct);
   return product;
-}
+};
 
 export async function updateProduct(id, data) {
   if (!id) throw new Error('ID es requerido');

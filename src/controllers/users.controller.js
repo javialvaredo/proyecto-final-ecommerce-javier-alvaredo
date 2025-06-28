@@ -1,5 +1,4 @@
-
-import usersService from "../services/users.services.js";
+import * as usersService from "../services/users.services.js";
 
 const getAllUsers = async (req, res) => {
   try {
@@ -23,7 +22,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const userId = await usersService.getUserById(id);
     
   if (!userId) {
@@ -50,9 +49,9 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { nombre, apellido, edad, email } = req.body;
+    const { nombre, apellido, edad, email, password } = req.body;
 
-    if (!nombre || !apellido || !edad || !email) {
+    if (!nombre || !apellido || !edad || !email || !password) {
       return res.status(400).json({
         status: 400,
         message: "Todos los campos son obligatorios",
@@ -63,8 +62,9 @@ const createUser = async (req, res) => {
       nombre,
       apellido,
       edad,
-      email
-    })
+      email,
+      password,
+    });
 
       res.status(201).json({
       status:201,
@@ -84,26 +84,29 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    const { nombre, apellido, edad, email } = req.body;
+    const id = req.params.id; // 🔄 No usamos parseInt, Firestore usa string
+    const { nombre, apellido, edad, email, password } = req.body;
 
-    if (!nombre && !apellido && !edad && !email) {
+    // Si no se envía ningún campo, lanzamos error
+    if (!nombre && !apellido && !edad && !email && !password) {
       return res.status(400).json({
-        status:400,
+        status: 400,
         message: "Debe haber al menos un campo para actualizar",
       });
     }
+
     const updatedUser = await usersService.updateUser(id, {
       nombre,
       apellido,
       edad,
       email,
+      password
     });
 
-    if (!updateUser) {
+    if (!updatedUser) {
       return res.status(404).json({
         status: 404,
-        message: "usuario no encontrado"
+        message: "Usuario no encontrado"
       });
     }
 
@@ -111,7 +114,7 @@ const updateUser = async (req, res) => {
       status: 200,
       message: "Usuario modificado con éxito",
       data: updatedUser,
-    })
+    });
 
   } catch (error) {
     res.status(500).json({
@@ -122,9 +125,10 @@ const updateUser = async (req, res) => {
   }
 };
 
+
 const deleteUser = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const deleted = await usersService.deleteUser(id);
         
     if (!deleted) {

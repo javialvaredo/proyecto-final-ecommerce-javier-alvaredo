@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 
 import {
   getAllUsers,
@@ -8,7 +8,7 @@ import {
   deleteUser
 } from "../controllers/users.controller.js";
 
-const router = express.Router();
+const router = Router();
 
 router.get('/users', getAllUsers);
 router.get('/users/:id', getUserById);

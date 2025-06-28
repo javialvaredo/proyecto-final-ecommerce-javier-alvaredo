@@ -24,6 +24,18 @@ Utiliza arquitectura api rest (modelo, servicio, controlador) separando las resp
     │   └── products.routes.js
 
 
+---
+
+## 🚀 Instalación y uso
+
+### Clonar el repositorio e instalar las dependencia
+
+```bash
+git clone https://github.com/javialvaredo/api-productos-firestore.git
+cd api-productos-firestore
+npm install 
+```
+
 ## Credenciales
 Utiliza un archivo .env con las credenciales de Firebase:
 

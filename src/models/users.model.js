@@ -1,145 +1,74 @@
-const users = [
-  {
-    id: 1,
-    nombre: "Juan",
-    apellido: "Pérez",
-    edad: 30,
-    email: "juan.perez@gmail.com"
-  },
-  {
-    id: 2,
-    nombre: "María",
-    apellido: "Gómez",
-    edad: 25,
-    email: "maria.gomez@yahoo.com"
-  },
-  {
-    id: 3,
-    nombre: "Lucas",
-    apellido: "Fernández",
-    edad: 28,
-    email: "lucas.fernandez@hotmail.com"
-  },
-  {
-    id: 4,
-    nombre: "Ana",
-    apellido: "Rodríguez",
-    edad: 22,
-    email: "ana.rodriguez@gmail.com"
-  },
-  {
-    id: 5,
-    nombre: "Carlos",
-    apellido: "López",
-    edad: 35,
-    email: "carlos.lopez@yahoo.com"
-  },
-  {
-    id: 6,
-    nombre: "Sofía",
-    apellido: "Martínez",
-    edad: 27,
-    email: "sofia.martinez@hotmail.com"
-  },
-  {
-    id: 7,
-    nombre: "Diego",
-    apellido: "García",
-    edad: 40,
-    email: "diego.garcia@gmail.com"
-  },
-  {
-    id: 8,
-    nombre: "Valentina",
-    apellido: "Ruiz",
-    edad: 21,
-    email: "valentina.ruiz@yahoo.com"
-  },
-  {
-    id: 9,
-    nombre: "Martín",
-    apellido: "Sánchez",
-    edad: 33,
-    email: "martin.sanchez@hotmail.com"
-  },
-  {
-    id: 10,
-    nombre: "Lucía",
-    apellido: "Torres",
-    edad: 29,
-    email: "lucia.torres@gmail.com"
-  },
-  {
-    id: 11,
-    nombre: "Agustín",
-    apellido: "Ramírez",
-    edad: 31,
-    email: "agustin.ramirez@yahoo.com"
-  },
-  {
-    id: 12,
-    nombre: "Camila",
-    apellido: "Flores",
-    edad: 26,
-    email: "camila.flores@hotmail.com"
-  },
-  {
-    id: 13,
-    nombre: "Mateo",
-    apellido: "Vega",
-    edad: 24,
-    email: "mateo.vega@gmail.com"
-  },
-  {
-    id: 14,
-    nombre: "Julieta",
-    apellido: "Acosta",
-    edad: 32,
-    email: "julieta.acosta@yahoo.com"
-  },
-  {
-    id: 15,
-    nombre: "Tomás",
-    apellido: "Castro",
-    edad: 38,
-    email: "tomas.castro@hotmail.com"
-  },
-  {
-    id: 16,
-    nombre: "Emilia",
-    apellido: "Silva",
-    edad: 23,
-    email: "emilia.silva@gmail.com"
-  },
-  {
-    id: 17,
-    nombre: "Bruno",
-    apellido: "Mendoza",
-    edad: 36,
-    email: "bruno.mendoza@yahoo.com"
-  },
-  {
-    id: 18,
-    nombre: "Mía",
-    apellido: "Iglesias",
-    edad: 27,
-    email: "mia.iglesias@hotmail.com"
-  },
-  {
-    id: 19,
-    nombre: "Nicolás",
-    apellido: "Cabrera",
-    edad: 30,
-    email: "nicolas.cabrera@gmail.com"
-  },
-  {
-    id: 20,
-    nombre: "Renata",
-    apellido: "Ortiz",
-    edad: 34,
-    email: "renata.ortiz@yahoo.com"
+import { db } from '../data/data.js';
+import {
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  deleteDoc,
+  doc,
+  setDoc
+} from 'firebase/firestore';
+
+const usersCollection = collection(db, 'users'); // obtiene la referencia al objeto parapoder operar
+
+
+export async function getAllUsers() { 
+  const querySnapshot = await getDocs(usersCollection); //obtiene todos los documentos de firestore
+  const users = []; //array para guardar los usarios que se obtienen
+  querySnapshot.forEach((doc) => { 
+    users.push({ id: doc.id, ...doc.data() }); 
+  }); 
+  return users; 
+};
+
+
+export async function getUserById(id) {
+  const userRef = doc(usersCollection, id);
+  const userSnap = await getDoc(userRef);
+  return userSnap.exists() ? { id: userSnap.id, ...userSnap.data() } : null; // retorna json con id
+}
+
+export async function saveUser(user) {
+  const docRef = await addDoc(usersCollection, user);
+  return { id: docRef.id, ...user };
+}
+
+export async function updateUser(id, updatedUser) {
+  const userRef = doc(usersCollection, id);
+  await setDoc(userRef, updatedUser , { merge: true });
+  return { id, ...updatedUser };
+}
+
+export async function deleteUser(id) {
+  await deleteDoc(doc(usersCollection, id));
+  return true;
+}
+
+//funcion para crear ID numérico incremental
+export async function createUserWithNumericId(userData) {
+  const snapshot = await getDocs(usersCollection);  // Traer todos los usuarios de Firestore
+
+  // Crear una lista de los user Id existentes, solo los que son números
+  const userIds = [];
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (typeof data.userId === 'number') {
+      userIds.push(data.userId);
+    }
+  });
+
+  // Buscar el próximo número disponible para usar como userId
+  let newId = 1;
+  if (userIds.length > 0) {
+    const maxId = Math.max(...userIds);
+    newId = maxId + 1;
   }
-];
+  
+  const newUser = { userId: newId, ...userData }; // Crear el nuevo usuario con el nuevo userId
 
+  const docRef = doc(usersCollection, String(newId));   // Crear la referencia al documento con el ID en formato texto
+  
+  await setDoc(docRef, newUser); // Guardar el registro en Firestore
 
-export default users ;
+  return { id: String(newId), userId: newId, ...userData };   // retornar el nuevo usuario con id y userId
+}
