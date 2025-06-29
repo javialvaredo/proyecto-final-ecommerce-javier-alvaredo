@@ -153,11 +153,42 @@ const deleteUser = async (req, res) => {
   }
 };
 
+//funcion controlador para login de usuario
+
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        status: 400,
+        message: "Email y contraseña son obligatorios",
+      });
+    }
+
+    const token = await usersService.loginUser(email, password);
+
+    res.status(200).json({
+      status: 200,
+      message: "Login exitoso",
+      token
+    });
+
+  } catch (error) {
+    res.status(401).json({
+      status: 401,
+      message: "usuario o contraseña inválidas",
+      error: error.message
+    });
+  }
+};
+
 
 export {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  loginUser
 };
