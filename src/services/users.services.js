@@ -1,5 +1,9 @@
 import * as UserModel from "../models/users.model.js";
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+
+const SECRET_KEY = process.env.SECRET_KEY;
+
 
 export async function getAllUsers() {
   const users = await UserModel.getAllUsers();
@@ -64,3 +68,25 @@ export async function deleteUser(id) {
     return product;
 };
 
+
+
+export async function loginUser(email, password) {
+
+  const user = await UserModel.getUserByEmail(email);
+  if (!user) {
+    throw new Error("Email no registrado");
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Contraseña incorrecta");
+  }
+
+  const token = jwt.sign(
+    { userId: user.id, email: user.email },
+    SECRET_KEY,
+    { expiresIn: "1h" }
+  );
+
+  return token;
+}

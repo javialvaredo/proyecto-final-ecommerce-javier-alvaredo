@@ -72,3 +72,19 @@ export async function createUserWithNumericId(userData) {
 
   return { id: String(newId), userId: newId, ...userData };   // retornar el nuevo usuario con id y userId
 }
+
+// buscar usuario por email para funcion login
+export async function getUserByEmail(email) {
+  const querySnapshot = await getDocs(usersCollection);
+  let foundUser = null;
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.email === email) {
+      foundUser = { id: doc.id, ...data };
+    }
+  });
+
+  return foundUser;
+}
+

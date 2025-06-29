@@ -1,12 +1,14 @@
-# 🛒 API de Productos con Firestore
+# 🛒 API REST con Node.js, Express y Firestore
 
-Esta es una API REST construida con **Node.js + Express** que gestiona un catálogo de productos usando **Google Firestore** como base de datos.
-Los productos tienen un ID numérico incremental personalizado (`productId`), y se pueden listar, crear, actualizar y eliminar.
-Utiliza arquitectura api rest (modelo, servicio, controlador) separando las responsabilidades para facilitar el mantenimiento y crecimiento del proyecto 
+Esta es una API REST construida con **Node.js + Express** que gestiona un catálogo de productos y usuarios, utilizando **Google Firestore** como base de datos.
+
+- Se aplica una arquitectura en capas (`modelo`, `servicio`, `controlador`) para mantener el código modular y escalable.
+- Las contraseñas de usuario se almacenan de forma segura utilizando **bcrypt**.
+- La autenticación de usuarios se maneja con **JSON Web Tokens (JWT)**.
 
 ---
 
-## 📦 Estructura del proyecto
+## 📁 Estructura del proyecto
 
 /raíz-del-proyecto
 ├── .env
@@ -22,7 +24,6 @@ Utiliza arquitectura api rest (modelo, servicio, controlador) separando las resp
     │   └── data.js               # Configuración de Firebase
     ├── routes/
     │   └── products.routes.js
-
 
 ---
 
@@ -45,13 +46,52 @@ FIREBASE_PROJECT_ID=tu_proyecto
 FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
 FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
 FIREBASE_APP_ID=tu_app_id
+SECRET_KEY = tu_contraseña
 
-## Endpoints disponibles:
-GET api/products
-GET api/products/:id
-POST api/products
-PUT api/products/:id
-DELETE /products/:id
+
+📦 Endpoints disponibles
+📘 Productos
+
+| Método | Ruta                | Descripción                   |
+| ------ | ------------------- | ----------------------------- |
+| GET    | `/api/products`     | Obtener todos los productos   |
+| GET    | `/api/products/:id` | Obtener producto por ID       |
+| POST   | `/api/products`     | Crear nuevo producto          |
+| PUT    | `/api/products/:id` | Actualizar producto existente |
+| DELETE | `/api/products/:id` | Eliminar producto             |
+
+
+👤 Usuarios
+
+| Método | Ruta             | Descripción                |
+| ------ | ---------------- | -------------------------- |
+| GET    | `/api/users`     | Obtener todos los usuarios |
+| GET    | `/api/users/:id` | Obtener usuario por ID     |
+| POST   | `/api/users`     | Crear nuevo usuario        |
+| PUT    | `/api/users/:id` | Actualizar usuario         |
+| DELETE | `/api/users/:id` | Eliminar usuario           |
+
+🔐 Autenticación
+
+| Método | Ruta               | Descripción                   |
+| ------ | ------------------ | ----------------------------- |
+| POST   | `/api/users/login` | Iniciar sesión (devuelve JWT) |
+
+
+🧪 Ejemplo de login con Postman
+POST /api/users/login
+{
+  "email": "juan.perez@gmail.com",
+  "password": "contraseña123"
+}
+
+Respuesta exitosa:
+{
+  "status": 200,
+  "message": "Login exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+}
+
 
 ✅ Requisitos
 Node.js v16 o superior
