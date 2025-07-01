@@ -1,6 +1,6 @@
 # 🛒 API REST con Node.js, Express y Firestore
 
-Esta es una API REST construida con **Node.js + Express** que gestiona un catálogo de productos y usuarios, utilizando **Google Firestore** como base de datos.
+El objetivo de este proyecto es crear una API REST construida con **Node.js + Express** que gestiona un catálogo de productos y usuarios, utilizando **Google Firestore** como base de datos.
 
 - Se aplica una arquitectura en capas (`modelo`, `servicio`, `controlador`) para mantener el código modular y escalable.
 - Las contraseñas de usuario se almacenan de forma segura utilizando **bcrypt**.
@@ -13,6 +13,8 @@ Esta es una API REST construida con **Node.js + Express** que gestiona un catál
 /raíz-del-proyecto
 ├── .env
 ├── index.js
+├──public/
+    │   └── index.html
 └── src/
     ├── controllers/
     │   └── products.controller.js
