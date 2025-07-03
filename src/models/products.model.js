@@ -45,8 +45,8 @@ export async function deleteProduct(id) {
 }
 
 //funcion para crear ID numérico incremental
-export async function createProductWithNumericId(productData) {
-  const snapshot = await getDocs(productsCollection);  // Traer todos los productos de Firestore
+export async function createProductWithNumericId(productData) { // recibe los datos ya validados en el servicio
+  const snapshot = await getDocs(productsCollection);  // Traer todos los documentos de Firestore
 
   // Crear una lista de los productId existentes, solo los que son números
   const productIds = [];

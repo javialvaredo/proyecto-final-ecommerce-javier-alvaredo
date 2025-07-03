@@ -50,7 +50,7 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const { nombre, categoria, descripcion, color, precio, stock } = req.body;
+    const { nombre, categoria, descripcion, color, precio, stock } = req.body; //destructuracion para obtener los datos 
 
     if (!nombre || !categoria || !descripcion || !color || !precio || !stock) {
       return res.status(400).json({
@@ -59,7 +59,7 @@ const createProduct = async (req, res) => {
       });
     }
 
-    const newProduct = await productsService.createProduct({
+    const newProduct = await productsService.createProduct({  //se llama al servicio para que guarde los datos
        nombre,
        categoria,
        descripcion,

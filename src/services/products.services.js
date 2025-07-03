@@ -12,8 +12,8 @@ export async function getProductById(id) {
 };
 
 export async function createProduct(data) {
-  const required = ['nombre', 'categoria', 'descripcion', 'color', 'precio', 'stock'];
-  for (const field of required) {
+  const required = ['nombre', 'categoria', 'descripcion', 'color', 'precio', 'stock']; //Se define un array con los campos obligatorios que debe tener data
+  for (const field of required) { // bucle que verifica que el campo nbo esta vacio
     if (!data[field]) throw new Error(`Campo requerido: ${field}`);
   }
 

@@ -27,8 +27,6 @@ app.use('/api', productsRouter);
 
 app.use('/api', usersRouter);
 
-console.log("Sirviendo archivos estáticos desde:", join(__dirname, 'public'));
-
 // Middleware para manejar errores 404 
 app.use((req, res, next) => { 
     res.status(404).send('Recurso no encontrado o ruta inválida'); 
