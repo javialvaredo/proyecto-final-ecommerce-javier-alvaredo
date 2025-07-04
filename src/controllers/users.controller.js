@@ -84,7 +84,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const id = req.params.id; // 🔄 No usamos parseInt, Firestore usa string
+    const id = req.params.id; 
     const { nombre, apellido, edad, email, password } = req.body;
 
     // Si no se envía ningún campo, lanzamos error
