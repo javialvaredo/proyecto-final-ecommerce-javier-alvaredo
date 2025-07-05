@@ -40,15 +40,24 @@ npm install
 ```
 
 ## Credenciales
-Utiliza un archivo .env con las credenciales de Firebase:
 
-FIREBASE_API_KEY=tu_api_key
-FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
-FIREBASE_PROJECT_ID=tu_proyecto
-FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
-FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
-FIREBASE_APP_ID=tu_app_id
-SECRET_KEY = tu_contraseña
+Utiliza un archivo .env con las credenciales de Firebase:
+FIREBASE_SERVICE_ACCOUNT={
+  "type": "service_account",
+  "project_id": "api-ecomerce-javier-alvaredo",
+  "private_key_id": "REEMPLAZAR_PRIVATE_KEY_ID",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nREEMPLAZAR_PRIVATE_KEY\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@api-ecomerce-javier-alvaredo.iam.gserviceaccount.com",
+  "client_id": "REEMPLAZAR_CLIENT_ID",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40api-ecomerce-javier-alvaredo.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+
+SECRET_KEY=REEMPLAZAR_SECRET_KEY
+
 
 
 📦 Endpoints disponibles
