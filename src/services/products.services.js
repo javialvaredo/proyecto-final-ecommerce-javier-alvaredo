@@ -11,6 +11,18 @@ export async function getProductById(id) {
   return product;
 };
 
+export async function getProductsByFilter(filters) {
+  if (!filters || Object.keys(filters).length === 0) {
+    // Si no hay filtros, retornamos todos los productos
+    return await ProductModel.getAllProducts();
+  }
+  
+  const products = await ProductModel.getProductsByFilter(filters);
+  return products;
+}
+
+
+
 export async function createProduct(data) {
   const required = ['nombre', 'categoria', 'descripcion', 'color', 'precio', 'stock']; //Se define un array con los campos obligatorios que debe tener data
   for (const field of required) { // bucle que verifica que el campo nbo esta vacio

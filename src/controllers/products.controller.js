@@ -47,6 +47,25 @@ const getProductById = async (req, res) => {
   }
 };
 
+const getProductsByFilter = async (req, res) => {
+  try {
+    const filters = req.query; // ej: { categoria: 'Electrónica', color: 'Rojo' }
+    const resultados = await productsService.getProductsByFilter(filters);
+
+    res.status(200).json({
+      status: 200,
+      count: resultados.length,
+      data: resultados,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Error al filtrar productos",
+      error: error.message,
+    });
+  }
+};
+
 
 const createProduct = async (req, res) => {
   try {
@@ -157,6 +176,7 @@ const deleteProduct = async (req, res) => {
 export {
   getAllProducts,
   getProductById,
+  getProductsByFilter,
   createProduct,
   updateProduct,
   deleteProduct

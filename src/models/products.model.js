@@ -19,6 +19,25 @@ export async function getProductById(id) {
 }
 
 
+export async function getProductsByFilter(filters) {
+  let query = productsCollection;
+
+  // Iteramos sobre cada filtro y armamos la query con where
+  for (const [field, value] of Object.entries(filters)) {
+    query = query.where(field, '==', value);
+  }
+
+  const snapshot = await query.get();
+  const products = [];
+  snapshot.forEach(doc => {
+    products.push({ id: doc.id, ...doc.data() });
+  });
+
+  return products;
+}
+
+
+
 export async function saveProduct(product) {
   const docRef = await productsCollection.add(product);
   return { id: docRef.id, ...product };

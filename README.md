@@ -54,13 +54,18 @@ SECRET_KEY = tu_contraseña
 📦 Endpoints disponibles
 📘 Productos
 
-| Método | Ruta                | Descripción                   |
-| ------ | ------------------- | ----------------------------- |
-| GET    | `/api/products`     | Obtener todos los productos   |
-| GET    | `/api/products/:id` | Obtener producto por ID       |
-| POST   | `/api/products`     | Crear nuevo producto          |
-| PUT    | `/api/products/:id` | Actualizar producto existente |
-| DELETE | `/api/products/:id` | Eliminar producto             |
+| Método | Ruta                   | Descripción                   |
+| ------ | ---------------------  | ----------------------------- |
+| GET    | `/api/products`        | Obtener todos los productos   |
+| GET    | `/api/products/filter` | Obtener producto por filtro   | 
+| GET    | `/api/products/:id`    | Obtener producto por ID       |
+| POST   | `/api/products`        | Crear nuevo producto          |
+| PUT    | `/api/products/:id`    | Actualizar producto existente |
+| DELETE | `/api/products/:id`    | Eliminar producto             |
+
+Ejemplo de fuscqueda por filtro:
+http://localhost:3000/api/products/filter?color=blanco
+http://localhost:3000/api/products/filter?categoria=Buzos
 
 
 👤 Usuarios
