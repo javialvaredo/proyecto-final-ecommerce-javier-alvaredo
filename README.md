@@ -82,17 +82,19 @@ SECRET_KEY = tu_contraseña
 
 🧪 Ejemplo de login con Postman
 POST /api/users/login
+
 {
-  "email": "juan.perez@gmail.com",
-  "password": "contraseña123"
+            "email": "Sandra28@gmail.com",
+            "password": "Sandra123"
 }
 
-Respuesta exitosa:
+Respuesta:
 {
-  "status": 200,
-  "message": "Login exitoso",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+    "status": 200,
+    "message": "Login exitoso",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiZW1haWwiOiJTYW5kcmEyOEBnbWFpbC5jb20iLCJpYXQiOjE3NTE3Mjg2MTUsImV4cCI6MTc1MTczMjIxNX0.b2gJeAi5A16PHEl2dmEf7K_YHcZq7m-UHvETUHfzFJw"
 }
+
 
 
 ✅ Requisitos
